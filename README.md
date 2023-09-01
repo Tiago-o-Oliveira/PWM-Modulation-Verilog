@@ -11,5 +11,5 @@ We will divide this Explanation is steps, so any signal (in a given frequency ra
 
 # 1º Step: Initial Assumptions and Definitions.
 
-For this project, we are going to take an arbitrary periodic signal, take as example the signal: $m(t) = 3*sin(2\pi*t + \pi/7)+2.5*sin(2*\pi*4*t)$
+For this project, we are going to take an arbitrary periodic signal, take as example the signal: $'m(t) = 3*sin(2\pi*t + \pi/7)+2.5*sin(2*\pi*4*t)'$
 

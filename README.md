@@ -85,5 +85,23 @@ end
 >[!NOTE]
 >In order for this to work, the 'signal.txt' file must be in the project directory^[example](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)
 
+## Memory address block
+This block is responsible for changing the addres on the memory addres bus folowing the signal sample rate, in this case, that means that our block must have a 100Hz Clock in it.Two parameters will be used in this module, the *addr width* used in memory block and the *Sampling Frequency*. For the rest of the module, its just a simple counter that resets when the count value reach 99 (which means 100 iterations).Also a assynchronous Reset logic its going to be added, just because most boards i have nativelly uses assynchronous reset, still talking about reset, in the code bellow the reset is triggered on falling edge, i made that choice because i like to implement the reset as push button on the board, and most of this buttons have pull-up resistors, which means they go to 0('low') when pressed. 
+
+```Verilog
+always @(posedge Clk or negedge Rst)begin//Assynchronous Reset on negative border
+		if(~Rst)begin
+			address <= 1'b0;
+		end
+		else begin
+			if(address==(sampling_frequency-1))begin//Restart condition = SamplingFrequency-1
+				address <= 1'b0;
+			end
+			else begin
+				address <= address + 1'b1;
+			end
+		end 
+	end
+```
 
 

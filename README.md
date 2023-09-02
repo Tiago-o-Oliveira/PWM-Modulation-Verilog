@@ -85,23 +85,53 @@ end
 >[!NOTE]
 >In order for this to work, the 'signal.txt' file must be in the project directory^[example](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)
 
-## Memory address block
+## Memory address Module
 This block is responsible for changing the addres on the memory addres bus folowing the signal sample rate, in this case, that means that our block must have a 100Hz Clock in it.Two parameters will be used in this module, the *addr width* used in memory block and the *Sampling Frequency*. For the rest of the module, its just a simple counter that resets when the count value reach 99 (which means 100 iterations).Also a assynchronous Reset logic its going to be added, just because most boards i have nativelly uses assynchronous reset, still talking about reset, in the code bellow the reset is triggered on falling edge, i made that choice because i like to implement the reset as push button on the board, and most of this buttons have pull-up resistors, which means they go to 0('low') when pressed. 
 
 ```Verilog
 always @(posedge Clk or negedge Rst)begin//Assynchronous Reset on negative border
-		if(~Rst)begin
+	if(~Rst)begin
+		address <= 1'b0;
+	end
+	else begin
+		if(address==(sampling_frequency-1))begin//Restart condition = SamplingFrequency-1
 			address <= 1'b0;
 		end
 		else begin
-			if(address==(sampling_frequency-1))begin//Restart condition = SamplingFrequency-1
-				address <= 1'b0;
-			end
-			else begin
-				address <= address + 1'b1;
-			end
-		end 
-	end
+			address <= address + 1'b1;
+		end
+	end 
+end
 ```
+## Clock Divider Module
+As seem it the topology of the circuit, our design needs two different clock sources, we will see that this can be easily acheived with some counter modules,but as always, since there is no free lunch, this 'simple' implementation is quite bad when taking synchronism into account and can lead to a serious hazard: [Metastability](https://www.wikiwand.com/en/Metastability_(electronics)).
+
+While many solutions to metastability are avaliable and can be implemented, this topic is a little bit above our current project, so, just for now, we are going to put this thing aside, but be aware that this exists and will come for you one day.
+This module will use two parameters, *InputClkFrequency*,this one will be our reference clock, usualy on fpga boards this value is 50 [MHz], it is my case so 50M is my choice, the other parameter is the *OutputClkFrequency*, that is, our desired output clock frequency, in this example it will be 100 [Hz].
+```Verilog
+always @(posedge ClkOsc or negedge Rst)begin
+	if(~Rst)begin
+		ClkDiv <= 1'b0;
+		i <= 1'b0;
+	end
+	else begin
+		if(i > (factor))begin
+			ClkDiv = ~ClkDiv;
+			i <= 1'b0;
+		end
+		else begin
+			i = i + 1'b1;
+		end
+	end
+end
+```
+We wanna go from a clock of 50e6 to 100 [Hz] this give us a division factor of 500e3, to match our logic , we need to divide our value for two, since we invert clock every half period, leading to 250e3 since it is a counter and starts on 0, subtracting one gives us the final value of 249999,the equation is:
+$$factor = (((InClkFreq/OutClkFreq)/2)-1)$$
+
+>[!NOTE]
+>While This formula generalizes the factor obtaining, the factor value is always integer, so if the clock frequencies are not multiple of each other, you will get a rounding error.
+
+
+
 
 

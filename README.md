@@ -123,6 +123,8 @@ While many solutions to metastability are avaliable and can be implemented, this
 
 This module will use two parameters, *InputClkFrequency*,this one will be our reference clock, usualy on fpga boards this value is 50 [MHz], it is my case so 50M is my choice, the other parameter is the *OutputClkFrequency*, that is, our desired output clock frequency.
 
+For the memory address and memory modules, the clock must have the same value of the signal sampling frequency, for the sawtooth counter,the register and the comparator, this value must be a value greater than the sampling frequency, most references recomend using one complete cycle of sawthoot for every signal sample.
+
 ```Verilog
 always @(posedge ClkOsc or negedge Rst)begin
 	if(~Rst)begin
@@ -146,6 +148,42 @@ $$factor = (((InClkFreq/OutClkFreq)/2)-1)$$
 
 >[!NOTE]
 >While This formula generalizes the factor obtaining, this value is always integer, so if the clock frequencies are not an integer multiple of each other, you will get a rounding error.
+
+## Register Module
+Synchronization is a beuaty ain't she? To keep things clockworking we are going to need a register module, the simplest, just to make sure our data arrive in the comparator module at the right time.
+
+This module uses one parameter *databits* and this parameter should have the same value as *count width* and the bits used in your signal.
+
+```Verilog
+always @(posedge Clk or negedge Rst)begin
+	if(~Rst)begin
+		Out <= 1'b0;
+	end
+	else begin
+		Out <= In;
+	end
+end
+```
+
+## Comparator Module
+This last piece of hardware,(finally) generates the PWM signal, simple comparing the memory data and the sawtooth counter values,and really thats it.
+
+```Verilog
+always @(posedge Clk or negedge Rst)begin
+	if(~Rst)begin
+		OutPwm <= 1'b0;
+	end
+	else begin
+		if(Signal > Saw)begin
+			OutPwm <= 1'b1;
+		end
+		else begin
+			OutPwm <= 1'b0;
+		end
+	end
+end
+```
+# 4th Step: Tie Everything Togheter
 
 
 

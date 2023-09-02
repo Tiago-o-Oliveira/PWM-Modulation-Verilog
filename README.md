@@ -29,7 +29,6 @@ Now that we have everithing defined, it is time to obtain our signal and proceed
     Fs = 100;
     Ts = 1/Fs;
 %Time Vector
-
     t = 0:Ts:1-Ts;
 %Signal
     m = sin(2*pi*t)+2.5*cos(2*pi*t*4 + pi/7);
@@ -79,9 +78,9 @@ addr width = 7 *this value means that our memory will have 2^N addresses,this va
 
 The memory block description can be found on *Quartus-Prime (or Quartusii)* templates, also, we need to load our data on memory start, this can be done by adding the folowing code to the memory block:
 ```Verilog
-    initial begin
-	$readmemb("signal.txt",memory);//Where memory is the name of the memory array,quartus usually calls it 'ram'
-    end
+initial begin
+    $readmemb("signal.txt",memory);//Where memory is the name of the memory array,quartus usually calls it 'ram'
+end
 ```
 >[!NOTE]
 >In order for this to work, the 'signal.txt' file must be in the project directory^[example](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)

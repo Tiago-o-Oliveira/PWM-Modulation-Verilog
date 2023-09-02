@@ -80,11 +80,11 @@ addr width = 7 *this value means that our memory will have 2^N addresses,this va
 The memory block description can be found on *Quartus-Prime (or Quartusii)* templates, also, we need to load our data on memory start, this can be done by adding the folowing code to the memory block:
 ```Verilog
     initial begin
-		$readmemb("signal.txt",memory);
-	end
+	$readmemb("signal.txt",memory);
+    end
 ```
 >[!NOTE]
->In order for this to work, the 'signal.txt' file must be in the project directory^[image](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)
+>In order for this to work, the 'signal.txt' file must be in the project directory^[example](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)
 
 
 

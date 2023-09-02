@@ -21,6 +21,7 @@ In addition, we must define the amount of bits that we are going to use to repre
 # 2nd Step: Obtaining the signal in Matlab
 
 Now that we have everithing defined, it is time to obtain our signal and proceed with the magic, i will be using Matlab, but the same code can be used in Octave without any modifications,in project files you will find a python version as well.
+
 ```Matlab
 %Pre-code 
     clc,clear all,close all;
@@ -40,16 +41,18 @@ Code Output:
 
 ![imagel](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/287f49dd-c151-48b3-b41d-c5d3dfd6df42)
 >[!NOTE]
->If you pay a little more attention to details, you may see that the figure is kinda edgy, this surely means that the sampling frequency is not adequate, raising it to 200 [Hz] would be better, but im keeping 100 for proof of concept
+>If you pay a little more attention to details, you may see that the figure is kinda edgy, this surely means that the sampling frequency is not adequate, raising it to 200 [Hz] would be better, but im keeping 100 for proof of concept.
 
 Now that we have our signal sampled, in order to load it in to memory, there are two more steps we need to take:quantization and codification.
 While you may find several different ways to do it, im choosing a method that i think is more intuitive. Taking a closer look to our signal, you may see that it has both negative and positve values,in a modulation like this one, we are intressed on this kind of oscilation, so we simply get rid of it applying an offset to our signal.
+
 ```Matlab
 %Previous code...
 %...
   m = m + abs(min(m))
 ```
 Having done that,we now have the same signal shape, but with a positive offset.Now you may notice that our signal varies from 0 to 6.75, we now must discretize this amplitude and assign a binary code to every amplitude step, im going to do that firstly normalizing the signal (making it ranges from 0 to 1) and then multiplying it by our max binary representation.
+
 ```Matlab
 %Previous code
 %...
@@ -57,6 +60,7 @@ Bits = 8;
 Out = (m/max(m))*((2^bits)-1)
 ```
 By simply doing that, our signal now ranges from 0 to 255, wich means we are using the maximum we can of our binary range.Once all this signal conditioning is done, it is time to export every signal value in a binary form,so it can be later loaded on the FPGA memory.We will be loading one cycle of the signal in the memory, in the example case, since our signal have 100 samples per second(100Hz) and a period of 1 [s],100 entries will be loaded.
+
 ```Matlab
 %Previous Code
 %...
@@ -65,6 +69,7 @@ By simply doing that, our signal now ranges from 0 to 255, wich means we are usi
     fprintf(fid,'%s\n',string(Outbin));%Print in our file one string per line
     fclose(fid);%Save the file,close the file,brings peace to our world
 ```
+
 >[!NOTE]
 >In Octave, you must convert your 'out' variable to integer before using dec2bin command, it can be done this way 'dec2bin(round(Out))', also there is no 'string' command on octave,so use a for loop instead(see project files for reference).
 
@@ -77,16 +82,22 @@ data width = 8 *wich represents the number of bits used to represent our signal,
 addr width = 7 *this value means that our memory will have 2^N addresses,this value must be greater than: * $SamplingFrequency*SignalPeriod$.
 
 The memory block description can be found on *Quartus-Prime (or Quartusii)* templates, also, we need to load our data on memory start, this can be done by adding the folowing code to the memory block:
+
 ```Verilog
 initial begin
     $readmemb("signal.txt",memory);//Where memory is the name of the memory array,quartus usually calls it 'ram'
 end
 ```
+
 >[!NOTE]
 >In order for this to work, the 'signal.txt' file must be in the project directory^[example](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)
 
-## Memory address Module
-This block is responsible for changing the addres on the memory addres bus folowing the signal sample rate, in this case, that means that our block must have a 100Hz Clock in it.Two parameters will be used in this module, the *addr width* used in memory block and the *Sampling Frequency*. For the rest of the module, its just a simple counter that resets when the count value reach 99 (which means 100 iterations).Also a assynchronous Reset logic its going to be added, just because most boards i have nativelly uses assynchronous reset, still talking about reset, in the code bellow the reset is triggered on falling edge, i made that choice because i like to implement the reset as push button on the board, and most of this buttons have pull-up resistors, which means they go to 0('low') when pressed. 
+## Memory address Module and Sawtooth Counter Module
+One instance of this block is responsible for changing the addres on the memory addres bus folowing the signal sample rate, in this case, that means that our block must have a 100Hz Clock in it.
+
+Another instance is responsible for 'generating' the sawtooth wave used in DDS.
+
+Two parameters will be used in this module, the *count width* the same of *addr width* used in memory block and the *max value*. For the rest of the module, its just a simple counter that resets when the count value reach (max value-1) (which means 'max value' iterations).Also a assynchronous Reset logic its going to be added, just because most boards i have nativelly uses assynchronous reset, still talking about reset, in the code bellow the reset is triggered on falling edge, i made that choice because i like to implement the reset as push button on the board, and most of this buttons have pull-up resistors, which means they go to 0('low') when pressed. 
 
 ```Verilog
 always @(posedge Clk or negedge Rst)begin//Assynchronous Reset on negative border
@@ -94,7 +105,7 @@ always @(posedge Clk or negedge Rst)begin//Assynchronous Reset on negative borde
 		address <= 1'b0;
 	end
 	else begin
-		if(address==(sampling_frequency-1))begin//Restart condition = SamplingFrequency-1
+		if(address==(max_value-1))begin//Restart condition = SamplingFrequency-1
 			address <= 1'b0;
 		end
 		else begin
@@ -107,7 +118,8 @@ end
 As seem it the topology of the circuit, our design needs two different clock sources, we will see that this can be easily acheived with some counter modules,but as always, since there is no free lunch, this 'simple' implementation is quite bad when taking synchronism into account and can lead to a serious hazard: [Metastability](https://www.wikiwand.com/en/Metastability_(electronics)).
 
 While many solutions to metastability are avaliable and can be implemented, this topic is a little bit above our current project, so, just for now, we are going to put this thing aside, but be aware that this exists and will come for you one day.
-This module will use two parameters, *InputClkFrequency*,this one will be our reference clock, usualy on fpga boards this value is 50 [MHz], it is my case so 50M is my choice, the other parameter is the *OutputClkFrequency*, that is, our desired output clock frequency, in this example it will be 100 [Hz].
+This module will use two parameters, *InputClkFrequency*,this one will be our reference clock, usualy on fpga boards this value is 50 [MHz], it is my case so 50M is my choice, the other parameter is the *OutputClkFrequency*, that is, our desired output clock frequency.
+
 ```Verilog
 always @(posedge ClkOsc or negedge Rst)begin
 	if(~Rst)begin
@@ -125,7 +137,8 @@ always @(posedge ClkOsc or negedge Rst)begin
 	end
 end
 ```
-We wanna go from a clock of 50e6 to 100 [Hz] this give us a division factor of 500e3, to match our logic , we need to divide our value for two, since we invert clock every half period, leading to 250e3 since it is a counter and starts on 0, subtracting one gives us the final value of 249999,the equation is:
+
+For example: we wanna go from a clock of 50e6 to 100 [Hz] this give us a division factor of 500e3, to match our logic , we need to divide our value for two, since we invert clock every half period, leading to 250e3 since it is a counter and starts on 0, subtracting one gives us the final value of 249999,the equation is:
 $$factor = (((InClkFreq/OutClkFreq)/2)-1)$$
 
 >[!NOTE]

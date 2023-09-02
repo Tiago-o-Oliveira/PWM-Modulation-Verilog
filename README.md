@@ -80,7 +80,7 @@ addr width = 7 *this value means that our memory will have 2^N addresses,this va
 The memory block description can be found on *Quartus-Prime (or Quartusii)* templates, also, we need to load our data on memory start, this can be done by adding the folowing code to the memory block:
 ```Verilog
     initial begin
-	$readmemb("signal.txt",memory);
+	$readmemb("signal.txt",memory);//Where memory is the name of the memory array,quartus usually calls it 'ram'
     end
 ```
 >[!NOTE]

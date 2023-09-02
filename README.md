@@ -9,7 +9,7 @@ The Topology utilized on the project will be as it follows:
 
 We will divide this Explanation is steps, so any signal (in a given frequency range) can be modulated.
 
-# 1º Step: Initial Assumptions and Definitions.
+# 1st Step: Initial Assumptions and Definitions.
 
 For this project, we are going to take an arbitrary periodic sinusoidal signal, take as example the signal: $\sin{(2\pi t)}+2.5*\sin{(2\pi 4t+\pi/7)}$
 We can now take some information of this signal: $Max-Frequency = 4 [Hz] $, $Period = 1 [s]$.
@@ -18,7 +18,7 @@ Using [Nyquist-Shannon Sampling Theorem](https://www.wikiwand.com/en/Nyquist%E2%
 
 In addition, we must define the amount of bits that we are going to use to represent this signal, this process may seem a little arbitrary at first, but its one of those things that you get the feel by doing it, for now, trust me that 8 bits are a reasonable choice for this signal.
 
-# 2° Step: Obtaining the signal in Matlab
+# 2nd Step: Obtaining the signal in Matlab
 
 Now that we have everithing defined, it is time to obtain our signal and proceed with the magic, i will be using Matlab, but the same code can be used in Octave without any modifications,in project files you will find a python version as well.
 ```Matlab
@@ -57,7 +57,7 @@ Having done that,we now have the same signal shape, but with a positive offset.N
 Bits = 8;
 Out = (m/max(m))*((2^bits)-1)
 ```
-By simply doing that, our signal now ranges from 0 to 255, wich means we are using the maximum we can of our binary range.Once all this signal conditioning is done, it is time to export every signal value in a binary form,so it can be later loaded on the FPGA memory.
+By simply doing that, our signal now ranges from 0 to 255, wich means we are using the maximum we can of our binary range.Once all this signal conditioning is done, it is time to export every signal value in a binary form,so it can be later loaded on the FPGA memory.We will be loading one cycle of the signal in the memory, in the example case, since our signal have 100 samples per second(100Hz) and a period of 1 [s],100 entries will be loaded.
 ```Matlab
 %Previous Code
 %...
@@ -67,5 +67,24 @@ By simply doing that, our signal now ranges from 0 to 255, wich means we are usi
     fclose(fid);%Save the file,close the file,brings peace to our world
 ```
 >[!NOTE]
->In Octave, you must convert your 'out' variable to integer before using dec2bin command, it can be done this way 'dec2bin(round(Out))', also there is no 'string' command on octave use a for loop instead, see project files for reference
+>In Octave, you must convert your 'out' variable to integer before using dec2bin command, it can be done this way 'dec2bin(round(Out))', also there is no 'string' command on octave,so use a for loop instead(see project files for reference).
+
+# 3rd Step: Describing individual modules
+## Memory module
+The memory module used in this project will be a dualport synchronous ram, this type of memory is a suitable choice, since it has a simple implementation and fullfil all project needs (we only need to read the data btw).
+Two parameters will be included in this block:
+
+data width = 8 *wich represents the number of bits used to represent our signal, must be coheren with the value choose in the previous step.*
+addr width = 7 *this value means that our memory will have 2^N addresses,this value must be greater than: * $SamplingFrequency*SignalPeriod$.
+
+The memory block description can be found on *Quartus-Prime (or Quartusii)* templates, also, we need to load our data on memory start, this can be done by adding the folowing code to the memory block:
+```Verilog
+    initial begin
+		$readmemb("signal.txt",memory);
+	end
+```
+>[!NOTE]
+>In order for this to work, the 'signal.txt' file must be in the project directory^[image](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/c6c2945c-c4c6-43e1-980f-546215357ed0)
+
+
 

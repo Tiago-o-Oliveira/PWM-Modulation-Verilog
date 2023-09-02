@@ -129,7 +129,7 @@ We wanna go from a clock of 50e6 to 100 [Hz] this give us a division factor of 5
 $$factor = (((InClkFreq/OutClkFreq)/2)-1)$$
 
 >[!NOTE]
->While This formula generalizes the factor obtaining, the factor value is always integer, so if the clock frequencies are not multiple of each other, you will get a rounding error.
+>While This formula generalizes the factor obtaining, this value is always integer, so if the clock frequencies are not an integer multiple of each other, you will get a rounding error.
 
 
 

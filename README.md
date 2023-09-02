@@ -97,7 +97,9 @@ One instance of this block is responsible for changing the addres on the memory 
 
 Another instance is responsible for 'generating' the sawtooth wave used in DDS.
 
-Two parameters will be used in this module, the *count width* the same of *addr width* used in memory block and the *max value*. For the rest of the module, its just a simple counter that resets when the count value reach (max value-1) (which means 'max value' iterations).Also a assynchronous Reset logic its going to be added, just because most boards i have nativelly uses assynchronous reset, still talking about reset, in the code bellow the reset is triggered on falling edge, i made that choice because i like to implement the reset as push button on the board, and most of this buttons have pull-up resistors, which means they go to 0('low') when pressed. 
+Two parameters will be used in this module, the *count width* the same of *addr width* used in memory block and the *max value*. For the rest of the module, its just a simple counter that resets when the count value reach (max value-1) (which means 'max value' iterations).
+
+Also a assynchronous Reset logic its going to be added, just because most boards i have nativelly uses assynchronous reset, still talking about reset, in the code bellow the reset is triggered on falling edge, i made that choice because i like to implement the reset as push button on the board, and most of this buttons have pull-up resistors, which means they go to 0('low') when pressed. 
 
 ```Verilog
 always @(posedge Clk or negedge Rst)begin//Assynchronous Reset on negative border
@@ -118,6 +120,7 @@ end
 As seem it the topology of the circuit, our design needs two different clock sources, we will see that this can be easily acheived with some counter modules,but as always, since there is no free lunch, this 'simple' implementation is quite bad when taking synchronism into account and can lead to a serious hazard: [Metastability](https://www.wikiwand.com/en/Metastability_(electronics)).
 
 While many solutions to metastability are avaliable and can be implemented, this topic is a little bit above our current project, so, just for now, we are going to put this thing aside, but be aware that this exists and will come for you one day.
+
 This module will use two parameters, *InputClkFrequency*,this one will be our reference clock, usualy on fpga boards this value is 50 [MHz], it is my case so 50M is my choice, the other parameter is the *OutputClkFrequency*, that is, our desired output clock frequency.
 
 ```Verilog

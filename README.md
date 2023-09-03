@@ -13,7 +13,9 @@ Originally created for a college course, it has been decoupled from the rest of 
 This project doesn't use any IP block because: Open Source plz
 
 The Topology utilized on the project will be as follows: 
-![image](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/7d2d46e2-ad1a-41cd-aeaf-3151d9f2a201)
+<p align="center">
+  <img width="300" height="300" src="https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/21d9df09-8590-4fd3-8e0e-ff033255ca49">
+</p>
 
 >[!NOTE]
 >Please Note that this will change as the project evolves

@@ -3,7 +3,8 @@ This project aims to implement [PWM modulation](https://www.wikiwand.com/en/Puls
 
 <p align="center">
   <img width="300" height="300" src="https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/96dabed6-1cb9-4972-9781-0b79f6d574e8">
-  <em>image_caption</em>
+  
+<em>Original Signal/PWM Modulation</em>
 </p>
 
 Originally created for a college course, it has been decoupled from the rest of the project for further development. As a secondary objective, this repository will be as didactic as possible.

@@ -185,6 +185,13 @@ end
 ```
 # 4th Step: Tie Everything Together
 
+Once we have all the modules described, it is time to put them all together. Following the topology proposed earlier, the result is:
+
+![image](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/a213bf9d-3512-4c80-84a3-649b8267d5f1)
+
+The parametrization of all modules we've done so far has helped us easily change signal characteristics by just tweaking some parameters.
+
+![image](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/509da046-387b-45e5-a607-619c6bdaff73)
 
 
 

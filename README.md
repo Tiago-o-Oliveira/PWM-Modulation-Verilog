@@ -4,6 +4,7 @@ This project aims to implement [PWM modulation](https://www.wikiwand.com/en/Puls
 <p align="center">
   <img width="300" height="300" src="https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/96dabed6-1cb9-4972-9781-0b79f6d574e8">
 </p>
+
 <p align="center">
 <em>Original Signal/PWM Modulation</em>
 </p>

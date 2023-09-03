@@ -3,6 +3,7 @@ module SignalTable_TB();
    //-----------Memory Parameters--------------------//
 	localparam data_width = 8;
 	localparam addr_width = 7;
+	localparam data_range = 100;
 	//--------------Input Ports-----------------------//
 	reg [addr_width-1:0] address ;
 	reg we ;
@@ -12,7 +13,7 @@ module SignalTable_TB();
 	wire [data_width-1:0] dataOut;
 	
 	integer k = 0;
-	SignalTable #(.data_width(data_width),.addr_width(addr_width)) DUT (
+	SignalTable #(.data_width(data_width),.addr_width(addr_width),.data_range(data_range)) DUT (
 	.Clk(Clk),
 	.WR(we),
 	.address(address),

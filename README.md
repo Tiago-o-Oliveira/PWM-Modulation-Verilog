@@ -193,6 +193,7 @@ The parametrization of all modules we've done so far has helped us easily change
 
 ![image](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/509da046-387b-45e5-a607-619c6bdaff73)
 
-
+>[!NOTE]
+>For now, almost all parameters are derived directly from the decisions we've made in the signal obtaining part, with the exception of the *addr width*, this value must be something like nextpow2(SamplingFrequency) (The next power of two after the sampling frequency). I still haven't figured out how to dynamically calculate it.
 
 

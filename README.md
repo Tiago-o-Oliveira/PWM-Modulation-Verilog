@@ -1,7 +1,8 @@
 # <h1 align="center">PWM-Modulation-Verilog</h1> 
 This project aims to implement [PWM modulation](https://www.wikiwand.com/en/Pulse-width_modulation) in Verilog, strongly based on [DDS](https://www.wikiwand.com/en/Direct_digital_synthesis). 
 
-![ezgif com-resize](https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/96dabed6-1cb9-4972-9781-0b79f6d574e8)
+<img align="center" width="300" height="300" src="https://github.com/Tiago-o-Oliveira/PWM-Modulation-Verilog/assets/116642713/96dabed6-1cb9-4972-9781-0b79f6d574e8">
+
 
 
 Originally created for a college course, it has been decoupled from the rest of the project for further development. As a secondary objective, this repository will be as didactic as possible.

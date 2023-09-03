@@ -8,9 +8,7 @@ This project aims to implement [PWM modulation](https://www.wikiwand.com/en/Puls
 <p align="center">
 <em>Original Signal/PWM Modulation</em>
 </p>
-Originally created for a college course, it has been decoupled from the rest of the project for further development. As a secondary objective, this repository will be as didactic as possible.
-
-This project doesn't use any IP block because: Open Source plz
+Originally created for a college course, it has been decoupled from the rest of the project for further development. As a secondary objective, this repository will be as didactic as possible.All the verilog files were compiled in two different boards DE10-Lite (FPGA 10M50DAF484C7G) and DE0 (FPGA EP3C16F484C6N), using both *Quartus Prime* and *Quartus ii* software.
 
 The Topology utilized on the project will be as follows: 
 <p align="center">
@@ -211,3 +209,4 @@ The parametrization of all modules we've done so far has helped us easily change
 
 --- 
 I've written all the code and text in this repo, while the grammar was revised using AI tools.
+100% Free of sugar, proteins and IP Cores

@@ -4,9 +4,9 @@ module Pwm_Modulator(
 	output Out_Pwm //Output PWM Signal
 );
 	
-	localparam FpgaClk = 50e6;
+	localparam FpgaClk = 50e5;
 	localparam SamplingFrequency = 100;
-	localparam databits = 8;
+	localparam databits = 8;	
 	localparam SawFreq = (SamplingFrequency*(2^^databits));
 	localparam addr_width = 7;
 	
@@ -61,7 +61,8 @@ module Pwm_Modulator(
 	//Memory Module
 		SignalTable #(
 		.data_width(databits),
-		.addr_width(addr_width)
+		.addr_width(addr_width),
+		.data_range(SamplingFrequency)
 		)MEM1(
 		.Clk(slowclock),
 		.WR(1'b0),

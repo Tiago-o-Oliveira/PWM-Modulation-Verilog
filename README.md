@@ -1,4 +1,4 @@
-# PWM-Modulation-Verilog
+# <h1 align="center">PWM-Modulation-Verilog</h1> 
 This project aims to implement PWM modulation in Verilog, strongly based on [DDS](https://www.wikiwand.com/en/Direct_digital_synthesis). Originally created for a college course, it has been decoupled from the rest of the project for further development. As a secondary objective, this repository will be as didactic as possible.
 
 This project doesn't use any IP block because: Open Source plz

@@ -4,7 +4,8 @@ synchronous memory module.
 module SignalTable #(
 	//----------------------------------------Parameters--------------------------------------------------//
 	parameter data_width = 8,//Number of Data bits used in representation
-	parameter addr_width = 7//2^N = Number of avaliable addresses, it must be greater than signal frequency
+	parameter addr_width = 7,//2^N = Number of avaliable addresses, it must be greater than signal frequency
+	parameter data_range = 100
 	)(
 	//----------------------------------------Inputs------------------------------------------------------//
 	input Clk,
@@ -18,7 +19,7 @@ module SignalTable #(
 	reg[(data_width-1):0] memory [0:(1<<(addr_width))-1];
 	//----------------------------------------Pre-Load----------------------------------------------------//
 	initial begin
-		$readmemb("signal.txt",memory);
+		$readmemb("signal.txt",memory,0,(data_range-1));
 	end
 	//----------------------------------------Control-----------------------------------------------------//
 	always @(posedge Clk)begin

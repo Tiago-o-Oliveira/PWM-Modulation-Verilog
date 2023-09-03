@@ -199,4 +199,4 @@ The parametrization of all modules we've done so far has helped us easily change
 >For now, almost all parameters are derived directly from the decisions we've made in the signal obtaining part, with the exception of the *addr width*, this value must be something like nextpow2(SamplingFrequency) (The next power of two after the sampling frequency). I still haven't figured out how to dynamically calculate it.
 
 --- 
-All text and code here are written for me, and the grammar was revised using AI tools.
+I've written all the code and text in this repo, while the grammar was revised using AI tools.

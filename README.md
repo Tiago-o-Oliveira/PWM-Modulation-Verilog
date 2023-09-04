@@ -56,7 +56,7 @@ Code Output:
 >If you pay a little more attention to details, you may see that the figure is kinda edgy, this surely means that the sampling frequency is not adequate, rising it to 200 [Hz] would be better, but im keeping 100 for proof of concept.
 
 Now that we have our signal sampled, in order to load it into memory, there are two more steps we need to take:quantization and codification.
-While you may find several different ways to do it, I've chosen a method that feels more intuitive to me. Taking a closer look at our signal, you may see that it has both negative and positive values. In a modulation like this one, we are interested in this kind of oscillation, so we simply get rid of it by applying an offset to our signal.
+While you may find several different ways to do it, I've chosen a method that feels more intuitive to me. Taking a closer look at our signal, you may see that it has both negative and positive values. In a modulation like this one, we are not interested in this kind of oscillation, so we simply get rid of it by applying an offset to our signal.
 
 ```Matlab
 %Previous code...
